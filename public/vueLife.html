@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue生命周期学习</title>
+    <script src="https://cdn.bootcss.com/vue/2.5.16/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <h1>{{message}}，这是在outerHtml中</h1>
+</div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 10
+        },
+        beforeCreate: function() {
+            //该实例内的所有东西都还没有创建，所以在这个生命周期钩子函数中$el,data都是undefined。
+            console.group('------beforeCreate创建前状态------');
+            console.log("%c%s", "color:red" , "el     : " + this.$el);
+            console.log("%c%s", "color:red","data   : " + this.$data);
+            console.log("%c%s", "color:red","message: " + this.message)
+        },
+        created: function() {
+            //在created的时候数据已经和data属性进行绑定，在这个生命周期钩子函数中，我们可以获取到data的值并对它进行操作。
+            console.group('------created创建完毕状态------');
+            console.log("%c%s", "color:red","el     : " + this.$el);
+            console.log("%c%s", "color:red","data   : " + this.$data);
+            console.log("%c%s", "color:red","message: " + this.message);
+        },
+        beforeMount: function() {
+            //（1）在这一阶段，首先会判断是否有el选项，如果有的话就继续向下编译，如果没有el选项，则停止编译，也就意味着停止了生命周期，直到在该实例上调用vm.$mount(el)[也就是动态引入了el]。
+            //（2）除了el，我们还会用到template，template对生命周期的影响如下：
+            //     如果如果vue实例对象中有template参数选项，则将其作为模板编译成render函数
+            //     如果没有template选项，则将外部html作为模板编译（可参考上面示例的结果）
+            //    template中的模板优先级要高于outer html的优先级
+            //（3）在vue对象中，还有一个render函数，它是以createElement作为参数，然后做渲染，而且可以直接嵌入JSX。
+
+            //注：综合排名优先级：render函数>template选项>outer Html
+
+            //此时是给vue实例对象添加$el成员，并且替换掉挂载的DOM元。
+
+            console.group('------beforeMount挂载前状态------');
+            console.log("%c%s", "color:red","el     : " + (this.$el));
+            console.log(this.$el);
+            console.log("%c%s", "color:red","data   : " + this.$data);
+            console.log("%c%s", "color:red","message: " + this.message);
+        },
+        mounted: function() {
+            //可以看到图中beforeMount钩子函数中挂载元素中还是{{message}}，到mounted钩子函数中的时候挂载已完成，所以挂载元素中显示的是message的值
+            //在mounted钩子函数中执行修改data的操作会触发beforeUpdate
+            console.group('------mounted 挂载结束状态------');
+            console.log("%c%s", "color:red","el     : " + this.$el);
+            console.log(this.$el);
+            console.log("%c%s", "color:red","data   : " + this.$data);
+            console.log("%c%s", "color:red","message: " + this.message);
+        },
+        beforeUpdate: function () {
+            //当vue发现data中的数据发生变化，会触发对对应组件的重新渲染，当数据改变后调用beforeupdata，当渲染完成后调用updated钩子函数
+            console.group('beforeUpdate 更新前状态===============》');
+            console.log("%c%s", "color:red","el     : " + this.$el);
+            console.log(this.$el);
+            console.log("%c%s", "color:red","data   : " + this.$data);
+            console.log("%c%s", "color:red","message: " + this.message);
+        },
+        updated: function () {
+            console.group('updated 更新完成状态===============》');
+            alert("没有更新")
+            console.log("%c%s", "color:red","el     : " + this.$el);
+            console.log(this.$el);
+            console.log("%c%s", "color:red","data   : " + this.$data);
+            console.log("%c%s", "color:red","message: " + this.message);
+        },
+        beforeDestroy: function () {
+            console.group('beforeDestroy 销毁前状态===============》');
+            console.log("%c%s", "color:red","el     : " + this.$el);
+            console.log(this.$el);
+            console.log("%c%s", "color:red","data   : " + this.$data);
+            console.log("%c%s", "color:red","message: " + this.message);
+        },
+        destroyed: function () {
+            console.group('destroyed 销毁完成状态===============》');
+            console.log("%c%s", "color:red","el     : " + this.$el);
+            console.log(this.$el);
+            console.log("%c%s", "color:red","data   : " + this.$data);
+            console.log("%c%s", "color:red","message: " + this.message)
+        }
+    })
+</script>
+</html>
